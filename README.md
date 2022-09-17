@@ -31,13 +31,14 @@ module "my_secret_group" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_restapi"></a> [restapi](#requirement\_restapi) | >= 1.17 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
-| <a name="provider_restapi"></a> [restapi](#provider\_restapi) | n/a |
+| <a name="requirement_restapi"></a> [restapi](#requirement\_restapi) | >= 1.17 |
 
 ## Inputs
 
