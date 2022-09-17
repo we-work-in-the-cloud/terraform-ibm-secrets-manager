@@ -1,5 +1,12 @@
-variable "iam_token" {}
-variable "endpoint" {}
+variable "iam_token" {
+  type = string
+  description = "IAM token to make API calls to the Secrets Manager instance"
+}
+
+variable "endpoint" {
+  type = string
+  description = "Endpoint to the Secrets Manager instance"
+}
 
 provider "restapi" {
   uri                  = var.endpoint
@@ -16,20 +23,22 @@ variable "resource_secret_group" {
     description = string
   })
   default = null
+  description = "Set the values for this input to create a secret group"
 }
 
 variable "resource_secret_arbitrary" {
-  type = object({
-    name = string
-    description = string
-    secret_group_id = string
-    labels          = list(string)
-    custom_metadata = any
+  type        = object({
+    name                    = string
+    description             = string
+    secret_group_id         = string
+    labels                  = list(string)
+    custom_metadata         = any
     version_custom_metadata = any
-    expiration_date = string
-    payload = string
+    expiration_date         = string
+    payload                 = string
   })
-  default = null
+  default     = null
+  description = "Set the values for this input to create a secret of type arbitrary"
 }
 
 variable "resource_secret_username_password" {
@@ -45,6 +54,7 @@ variable "resource_secret_username_password" {
     expiration_date = string
   })
   default = null
+  description = "Set the values for this input to create a secret of type username_password"
 }
 
 variable "resource_secret_iam_credentials" {
@@ -61,6 +71,7 @@ variable "resource_secret_iam_credentials" {
     reuse_api_key = bool
   })
   default = null
+  description = "Set the values for this input to create a secret of type iam_credentials"
 }
 
 variable "resource_secret_imported_cert" {
@@ -76,6 +87,7 @@ variable "resource_secret_imported_cert" {
     intermediate = string
   })
   default = null
+  description = "Set the values for this input to create a secret of type imported_cert"
 }
 
 variable "resource_secret_public_cert" {
@@ -100,6 +112,7 @@ variable "resource_secret_public_cert" {
     })
   })
   default = null
+  description = "Set the values for this input to create a secret of type public_cert"
 }
 
 variable "resource_secret_private_cert" {
@@ -126,6 +139,7 @@ variable "resource_secret_private_cert" {
     })
   })
   default = null
+  description = "Set the values for this input to create a secret of type private_cert"
 }
 
 //kv
@@ -140,6 +154,7 @@ variable "resource_secret_kv" {
     payload                 = any
   })
   default = null
+  description = "Set the values for this input to create a secret of type kv"
 }
 
 locals {
@@ -250,4 +265,5 @@ output "id" {
       restapi_object.resource_with_no_update.0.id
     ): null
   )
+  description = "ID of the created secret group or secret"
 }
