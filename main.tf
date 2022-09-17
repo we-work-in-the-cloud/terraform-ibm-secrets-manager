@@ -179,13 +179,6 @@ locals {
     )))))))))
 }
 
-resource "null_resource" "resource_change" {
-  count = (var.resource_secret_group == null ? 1 : 0)
-
-  triggers = {
-    a_change = jsonencode(local.resource)
-  }
-}
 
 resource "restapi_object" "resource" {
   count = var.resource_secret_group != null ? 1 : 0
@@ -203,8 +196,32 @@ resource "restapi_object" "resource" {
   debug        = true
 }
 
+resource "null_resource" "resource_change" {
+  count = (
+    var.resource_secret_arbitrary != null ||
+    var.resource_secret_username_password != null ||
+    var.resource_secret_iam_credentials != null ||
+    var.resource_secret_imported_cert != null ||
+    var.resource_secret_private_cert != null ||
+    var.resource_secret_public_cert != null ||
+    var.resource_secret_kv != null
+  ) ? 1 : 0
+
+  triggers = {
+    a_change = jsonencode(local.resource)
+  }
+}
+
 resource "restapi_object" "resource_with_no_update" {
-  count = var.resource_secret_group == null ? 1 : 0
+  count = (
+    var.resource_secret_arbitrary != null ||
+    var.resource_secret_username_password != null ||
+    var.resource_secret_iam_credentials != null ||
+    var.resource_secret_imported_cert != null ||
+    var.resource_secret_private_cert != null ||
+    var.resource_secret_public_cert != null ||
+    var.resource_secret_kv != null
+  ) ? 1 : 0
 
   path = "/api/v1/${local.resource_path}"
 
@@ -227,8 +244,10 @@ resource "restapi_object" "resource_with_no_update" {
 
 output "id" {
   value = (
-    var.resource_secret_group != null ?
-    restapi_object.resource.0.id :
-    restapi_object.resource_with_no_update.0.id
+    local.resource != null ? (
+      var.resource_secret_group != null ?
+      restapi_object.resource.0.id :
+      restapi_object.resource_with_no_update.0.id
+    ): null
   )
 }

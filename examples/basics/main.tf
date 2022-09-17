@@ -185,7 +185,7 @@ module "my_kv_secret" {
   }
 }
 
-output "outputs" {
+output "resources" {
   value = [
     module.my_secret_group.id,
     module.my_arbitrary_secret.id,
