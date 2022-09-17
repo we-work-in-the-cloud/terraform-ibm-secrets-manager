@@ -64,3 +64,7 @@ module "my_secret_group" {
 ## License
 
 Apache 2 Licensed. See [LICENSE](LICENSE) for full details.
+
+---
+
+_Generated with `terraform-docs markdown table . --hide-empty`_

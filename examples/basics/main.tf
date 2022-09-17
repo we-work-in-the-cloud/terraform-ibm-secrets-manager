@@ -1,13 +1,15 @@
 terraform {
   required_providers {
     ibm = {
-      source = "IBM-Cloud/ibm"
+      source  = "IBM-Cloud/ibm"
+      version = ">= 1.40"
     }
   }
 }
 
 variable "ibmcloud_api_key" {
-  type = string
+  type        = string
+  description = "IBM Cloud API key with access to the Secrets Manager instance"
 }
 
 variable "region" {
@@ -29,7 +31,7 @@ provider "ibm" {
 data "ibm_iam_auth_token" "tokendata" {}
 
 module "my_secret_group" {
-  source = "../../"
+  source = "we-work-in-the-cloud/secrets-manager/ibm"
 
   iam_token = data.ibm_iam_auth_token.tokendata.iam_access_token
   endpoint  = var.secrets_manager_endpoint
@@ -41,7 +43,7 @@ module "my_secret_group" {
 }
 
 module "my_arbitrary_secret" {
-  source = "../../"
+  source = "we-work-in-the-cloud/secrets-manager/ibm"
 
   iam_token = data.ibm_iam_auth_token.tokendata.iam_access_token
   endpoint  = var.secrets_manager_endpoint
@@ -63,7 +65,7 @@ module "my_arbitrary_secret" {
 }
 
 module "my_username_password_secret" {
-  source = "../../"
+  source = "we-work-in-the-cloud/secrets-manager/ibm"
 
   iam_token = data.ibm_iam_auth_token.tokendata.iam_access_token
   endpoint  = var.secrets_manager_endpoint
@@ -80,18 +82,18 @@ module "my_username_password_secret" {
       custom_value = "123456789"
     }
 
-    username = "admin"
-    password = "password"
+    username        = "admin"
+    password        = "password"
     expiration_date = "2030-04-01T09:30:00Z"
   }
 }
 
 resource "ibm_iam_service_id" "my_iam_credentials_secret" {
-  name        = "my_iam_credentials_secret_id"
+  name = "my_iam_credentials_secret_id"
 }
 
 module "my_iam_credentials_secret" {
-  source = "../../"
+  source = "we-work-in-the-cloud/secrets-manager/ibm"
 
   iam_token = data.ibm_iam_auth_token.tokendata.iam_access_token
   endpoint  = var.secrets_manager_endpoint
@@ -138,7 +140,7 @@ resource "tls_self_signed_cert" "my_imported_cert_secret" {
 }
 
 module "my_imported_cert_secret" {
-  source = "../../"
+  source = "we-work-in-the-cloud/secrets-manager/ibm"
 
   iam_token = data.ibm_iam_auth_token.tokendata.iam_access_token
   endpoint  = var.secrets_manager_endpoint
@@ -155,37 +157,38 @@ module "my_imported_cert_secret" {
       custom_value = "123456789"
     }
 
-    certificate = tls_self_signed_cert.my_imported_cert_secret.cert_pem
-    private_key = tls_private_key.my_imported_cert_secret.private_key_pem
+    certificate  = tls_self_signed_cert.my_imported_cert_secret.cert_pem
+    private_key  = tls_private_key.my_imported_cert_secret.private_key_pem
     intermediate = null
   }
 }
 
 module "my_kv_secret" {
-  source = "../.."
+  source = "we-work-in-the-cloud/secrets-manager/ibm"
 
   iam_token = data.ibm_iam_auth_token.tokendata.iam_access_token
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_kv = {
-    name                    = "my-kv-secret"
-    description             = "my-secret-description"
-    secret_group_id         = module.my_secret_group.id
-    labels                  = ["a_label"]
+    name            = "my-kv-secret"
+    description     = "my-secret-description"
+    secret_group_id = module.my_secret_group.id
+    labels          = ["a_label"]
     custom_metadata = {
       custom_value = "123456789"
     }
     version_custom_metadata = {
       custom_value = "123456789"
     }
-    
-    payload                 = {
+
+    payload = {
       apikey = "12345678"
     }
   }
 }
 
 output "resources" {
+  description = "IDs of the resources created in the example"
   value = [
     module.my_secret_group.id,
     module.my_arbitrary_secret.id,
