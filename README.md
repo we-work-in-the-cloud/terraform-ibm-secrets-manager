@@ -1,4 +1,4 @@
-# Helpers for Secrets Manager 
+# Helpers for Secrets Manager
 
 This module helps to create secret groups and secrets with Terraform.
 
