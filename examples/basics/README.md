@@ -39,6 +39,7 @@ This example illustrates how to create a secret group and secrets
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_basename"></a> [basename](#input\_basename) | Prefix for the resources to be created | `string` | `"sm-example"` | no |
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | IBM Cloud API key with access to the Secrets Manager instance | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region where to deploy the example | `string` | `"us-south"` | no |
 | <a name="input_secrets_manager_endpoint"></a> [secrets\_manager\_endpoint](#input\_secrets\_manager\_endpoint) | Endpoint URL of the Secrets Manager instance | `string` | n/a | yes |

@@ -23,6 +23,12 @@ variable "secrets_manager_endpoint" {
   description = "Endpoint URL of the Secrets Manager instance"
 }
 
+variable "basename" {
+  type        = string
+  description = "Prefix for the resources to be created"
+  default     = "sm-example"
+}
+
 provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
@@ -37,7 +43,7 @@ module "my_secret_group" {
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_group = {
-    name        = "my-secret-group"
+    name        = "${var.basename}-secret-group"
     description = "my-secret-group-description"
   }
 }
@@ -49,7 +55,7 @@ module "my_arbitrary_secret" {
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_arbitrary = {
-    name            = "my-arbitrary-secret"
+    name            = "${var.basename}-arbitrary-secret"
     description     = "my-secret-description"
     secret_group_id = module.my_secret_group.id
     labels          = ["a_label"]
@@ -71,7 +77,7 @@ module "my_username_password_secret" {
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_username_password = {
-    name            = "my-username_password-secret"
+    name            = "${var.basename}-username_password-secret"
     description     = "my-secret-description"
     secret_group_id = module.my_secret_group.id
     labels          = ["a_label"]
@@ -89,7 +95,7 @@ module "my_username_password_secret" {
 }
 
 resource "ibm_iam_service_id" "my_iam_credentials_secret" {
-  name = "my_iam_credentials_secret_id"
+  name = "${var.basename}-iam_credentials-service-id"
 }
 
 module "my_iam_credentials_secret" {
@@ -99,7 +105,7 @@ module "my_iam_credentials_secret" {
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_iam_credentials = {
-    name            = "my-iam_credentials-secret"
+    name            = "${var.basename}-iam_credentials-secret"
     description     = "my-secret-description"
     secret_group_id = module.my_secret_group.id
     labels          = ["a_label"]
@@ -146,7 +152,7 @@ module "my_imported_cert_secret" {
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_imported_cert = {
-    name            = "my-imported_cert-secret"
+    name            = "${var.basename}-imported_cert-secret"
     description     = "my-secret-description"
     secret_group_id = module.my_secret_group.id
     labels          = ["a_label"]
@@ -170,7 +176,7 @@ module "my_kv_secret" {
   endpoint  = var.secrets_manager_endpoint
 
   resource_secret_kv = {
-    name            = "my-kv-secret"
+    name            = "${var.basename}-kv-secret"
     description     = "my-secret-description"
     secret_group_id = module.my_secret_group.id
     labels          = ["a_label"]
